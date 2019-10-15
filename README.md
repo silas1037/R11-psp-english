@@ -1,69 +1,166 @@
+---
+title: 如何破解最果てのイマ
+date: 2019-10-15 19:09:14
+tags:
+---
 
-This project ports the translation of **Remember 11 - the age of infinity** game to PSP.
-
-If you know Japanese and want to improve some parts of this translation, contact me [at gbatemp directly](https://gbatemp.net/members/dreambottle.384881/), or in the thread, listed below.
-
-### Useful Links
-
-[**Patch Downloads**](https://github.com/dreambottle/R11-psp-english/releases)
-
-[Thread on Gbatemp.net](https://gbatemp.net/threads/release-remember11-the-age-of-infinity-psp-english-translation.470256/)
-
-[Remember11 Explained](https://adayem.wordpress.com/remember11-explained/) - explanation and analysis of the game mysteries, also has a full walkthrough chart.
-
-[Remember11 links on Wikia](http://remember11.wikia.com/wiki/Analysis_of_Remember_11) - contains other useful links
-
-Credits for English translation go to [TLWiki team](https://tlwiki.org/?title=Remember11_-_the_age_of_infinity)
+# how to extract / depack / unpack text of Saihate no Ima?
 
 
-Current status
------------
 
-Scenes: Ported - But text overflows the text box in some places. (Move the text box a bit up in game settings)
-<br>
-Shortcuts (init.bin): Ported.
-<br>
-TIPS (init.bin): Ported. Starting from version 2, crashes are fixed.
-<br>
-Names (init.bin): Ported.
-<br>
-Chronology (init.bin): Not ported.
-<br>
-Menus (BOOT.BIN): Partial. Need help with translation here, because text is different from the PC version. HOME menu - Done.
-<br>
-Font (FONT00.FOP): Tweaked for English text. Reduced width a bit. EN glyphs are brightened and sharpened.
+I had read [couldnot unpack](<https://blog.ztjal.info/acg/acg-data/galgame-can-not-unpack-record> )
 
-Other Projects
------------
+As a Tanaka Romeo's fake fans, I want to crack it anyway.
 
-I want to release a similar patch and sources of the tools for Ever 17 for English and, hopefully, Spanish and Russian translations. However, I can't give any timelines for this, because I do this in free time, whenever I have inspiration for it. Meanwhile, you can use [this patch, released by other fellas](https://gbatemp.net/threads/release-ever17-the-out-of-infinity-psp-english-translation.469362/).
+It was even taken over by Famille chs group, however they discard it.
+
+It must be unpacked.
+
+It must be unpacked.
+
+It must be unpacked.
+
+record on VN STATs :
+
+| Game title     | Developer | Game engine | [VNDB                                                        | Unique kanji | Line count | MB size | Writer       |
+| -------------- | --------- | ----------- | ------------------------------------------------------------ | ------------ | ---------- | ------- | ------------ |
+| Saihate no Ima | Xuse      |             | [vndb](https://web.archive.org/web/20170708071728/http://vndb.org/v1278) | 2578         |            | 1.84    | Tanaka Romeo |
 
 
-For Developers
------------
 
-This project contains a bunch of scripts and programs written in shell script, python3 and C, which automate the process of applying translation. I ran this on macos, but should work on linux as well.
+way to unpack
 
-1. Put the Remember11 iso at `iso/Remember11-jap.iso`
+My aim is to get text. I use PSP to crack rather than PC.
 
-2. Run `./make.sh`
+script files are in `"Q:\PSP_GAME\USRDIR\mac.afs"`, use crass：
 
-3. Result iso will be at `iso/remember11-repacked.iso`
+```
+a_boot.BIP
+a_cmn_00.BIP
+a_epl_00.BIP
+a_epl_01.BIP
+a_epl_02.BIP
+a_epl_03.BIP
+a_prl_01.BIP
+a_prl_02.BIP
+...
+```
 
-Afterwards, `./generate-patches.sh` can be run in order to generate xdelta3 diff files.
+Or AFSExplorer or exafs.exe or https://github.com/dreambottle/R11-psp-english/blob/master/unpack-afs.sh> 
 
-For further details, read the contents of shell scripts (and other source files).
+For *.bip, Google`PSP "afs" "t2p"`：
 
-Tip: After you've made changes to the text or other resources, run `./repack-all.sh` script to skip the "unpacking" phase and repack changes.
+<https://github.com/dreambottle/R11-psp-english/blob/master/src/decompressbip.c> 
 
-##### Dependencies:
+Otherwise https://github.com/uyjulian/e17p#formats-and-parsers-remember11> 
 
-The following tools should be available on your PATH:
+Ubuntu14.04，`gcc -o exbip decompressbip.c lzss.c`
 
-`7z mkisofs gcc python3`
+generate exbip
 
-- `mkisofs` is a part of `cdrtools` package - google it.
+create `run.sh`:
 
-- Brew command for macos: `brew install p7zip cdrtools python3`
+```shell
+for line in `cat file.txt`
+do
+echo $line
+exbip bip/$line $line.txt
+done
+```
 
-- Last tested to be working with python v3.7.0
+create file.txt:
+
+```
+a_boot.BIP
+a_cmn_00.BIP
+a_epl_00.BIP
+a_epl_01.BIP
+a_epl_02.BIP
+a_epl_03.BIP
+a_prl_01.BIP
+a_prl_02.BIP
+...
+```
+
+put all *.bip into bip/，chmod 777，execute run.sh
+
+get *.txt：
+
+```d
+Offset      0  1  2  3  4  5  6  7   8  9  A  B  C  D  E  F
+
+000022A0   01 00 00 00 FF FF FF 23  FF FF FF FF 01 00 00 00       #    
+000022B0   FF 7F 00 00 FF 7F 00 00  00 00 00 00 00 00 00 18                 
+000022C0   00 00 00 00 1E 00 00 00  00 00 00 00 00 00 00 00                   
+000022D0   6E 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00   n               
+000022E0   FF FF FF FF FF FF FF FF  FF FF FF FF FF FF FF FF   
+000022F0   82 BB 82 B5 82 C4 94 45  82 CD 81 41 91 90 8C B4   そして忍は A?原
+00002300   82 C9 98 C8 82 F1 82 C5  82 A2 82 BD 81 42 25 4B   に佇んでいた B%K
+00002310   25 50 00 89 F9 82 A9 82  B5 82 A2 8F EA 8F 8A 82   %P 懐かしい ?鰍
+00002320   BE 81 42 25 4E 82 A2 82  AD 82 C2 82 A9 82 CC 8E   ?B%Nいくつかの?
+00002330   76 82 A2 8F 6F 82 AA 82  A0 82 E9 81 42 25 4B 25   vい oがある B%K%
+00002340   50 00 82 BD 82 C6 82 A6  82 CE 95 97 82 F0 8E E8   P たとえば風を手
+00002350   8C 4A 82 E9 8F 70 82 F0  8A 6F 82 A6 82 BD 82 CC   繰る pを覚えたの
+
+```
+
+extract text out:
+
+loop read 8 byte as`b'\xff\xff\xff\xff\xff\xff\xff\xff' and b'\xff\xff\xff\xff\xff\xff\xff\xff'`then get jp text, remove '\x00'`, replace`b"\x25\x4B\x25\x50"  as %K%P and b"\x25\x4E" as %N to b"\x0D\x0A" as \n`。
+
+Python:
+
+```python
+srcdir = "M:/PSP/run/text-TST/1.bip.txt"
+outfile = os.path.split(src)[0] + "-Out/" + os.path.split(src)[1]
+totalsize = os.path.getsize(src)
+fp = open(outfile, "wb") #, encoding="utf-8")
+size = 0
+flag = 0
+with open(src, "rb") as f:
+    while size < totalsize:
+        a = f.read(8)
+        size += 8
+        if a == b'\xff\xff\xff\xff\xff\xff\xff\xff':
+            a = f.read(8)
+            size += 8
+            if a == b'\xff\xff\xff\xff\xff\xff\xff\xff':
+                flag = 1
+        if flag == 1:
+            a = f.read(totalsize - size)
+            size = totalsize
+            a = a.replace(b"\x00", b"").replace(b"\x25\x4B\x25\x50", b"\x0D\x0A").replace(b"\x25\x4E", b"\x0D\x0A")
+            fp.write(a)
+fp.close()
+```
+
+remaining text to solve alone
+
+```
+CHAPTER00.BIP.txt
+CHAPTER01.BIP.txt
+CHAPTER02.BIP.txt
+CHAPTER03.BIP.txt
+CHAPTER04.BIP.txt
+CHAPTER05.BIP.txt
+CHAPTER06.BIP.txt
+CHAPTER07.BIP.txt
+CHAPTER08.BIP.txt
+SHORTCUT.BIP.txt
+```
+
+
+
+get text
+
+```
+そして忍は、草原に佇んでいた。
+懐かしい場所だ。
+いくつかの思い出がある。
+……
+```
+
+finish
+
+---
+
